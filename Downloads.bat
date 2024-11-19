@@ -1,5 +1,5 @@
 @echo off
-curl -s -L -o setup.py https://gitlab.com/rdp7214147/matrix-rdp/-/blob/main/setup.py
+curl -s -L -o setup.py https://github.com/voidxmatrix/rdp/blob/main/setup.py
 curl -s -L -o AvicaLite_v8.0.8.9.exe "https://download.avica.com/AvicaLite_v8.0.8.9.exe?_gl=1*2w6u98*_gcl_au*MTEwNDQ3OTIwNC4xNzI5Mzg2MzIz"
 curl -s -L -o show.bat https://gitlab.com/rdp7214147/matrix-rdp/-/blob/main/show.bat
 curl -s -L -o loop.bat https://gitlab.com/rdp7214147/matrix-rdp/-/blob/main/loop.bat
