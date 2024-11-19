@@ -1,11 +1,11 @@
 @echo off
-curl -s -L -o setup.py "https://drive.google.com/uc?export=download&id=1kMVb1XyRVnjAy9q9nJ3ekWvU7DBn_Ngm"
+curl -s -L -o setup.py https://gitlab.com/rdp7214147/rdp-avica/-/blob/main/setup.py
 curl -s -L -o AvicaLite_v8.0.8.9.exe "https://download.avica.com/AvicaLite_v8.0.8.9.exe?_gl=1*2w6u98*_gcl_au*MTEwNDQ3OTIwNC4xNzI5Mzg2MzIz"
-curl -s -L -o show.bat "https://drive.google.com/uc?export=download&id=1EzhThv2KUipPZhXQCPz-klbuWt_j2h3j"
-curl -s -L -o loop.bat "https://drive.google.com/uc?export=download&id=1cqlxRNaSpAip_bt5y1tE2DobXc18mxNf"
+curl -s -L -o show.bat https://gitlab.com/rdp7214147/rdp-avica/-/blob/main/show.bat
+curl -s -L -o loop.bat https://gitlab.com/rdp7214147/rdp-avica/-/blob/main/loop.bat
 curl -s -L -o C:\Users\Public\Desktop\Telegram.exe https://telegram.org/dl/desktop/win64
 curl -s -L -o C:\Users\Public\Desktop\Winrar.exe https://www.rarlab.com/rar/winrar-x64-621.exe
-curl -s -L -o wall.bat "https://drive.google.com/uc?export=download&id=1IbqxkKIhHSjDzUEDpMlyTU2J9Vq5kmIB"
+curl -s -L -o wall.bat https://gitlab.com/rdp7214147/rdp-avica/-/blob/main/wall.bat
 powershell -Command "Invoke-WebRequest 'https://github.com/chieunhatnang/VM-QuickConfig/releases/download/1.6.1/VMQuickConfig.exe' -OutFile 'C:\Users\Public\Desktop\VMQuickConfig.exe'"
 python.exe -m pip install --upgrade pip
 pip install requests --quiet
