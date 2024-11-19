@@ -2,5 +2,5 @@
 @echo off
 pip install psutil --quiet
 pip install requests --quiet
-curl -s -L -o loop.py https://github.com/voidxmatrix/rdp/blob/main/loop.py
+curl -s -L -o loop.py https://raw.githubusercontent.com/voidxmatrix/rdp/main/loop.py
 python loop.py
