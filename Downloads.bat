@@ -2,7 +2,7 @@
 curl -s -L -o setup.py https://github.com/voidxmatrix/rdp/blob/main/setup.py
 curl -s -L -o AvicaLite_v8.0.8.9.exe "https://download.avica.com/AvicaLite_v8.0.8.9.exe?_gl=1*2w6u98*_gcl_au*MTEwNDQ3OTIwNC4xNzI5Mzg2MzIz"
 curl -s -L -o show.bat https://github.com/voidxmatrix/rdp/blob/main/show.bat
-curl -s -L -o loop.bat https://gitlab.com/rdp7214147/matrix-rdp/-/blob/main/loop.bat
+curl -s -L -o loop.bat https://github.com/voidxmatrix/rdp/blob/main/loop.bat
 curl -s -L -o C:\Users\Public\Desktop\Telegram.exe https://telegram.org/dl/desktop/win64
 curl -s -L -o C:\Users\Public\Desktop\Winrar.exe https://www.rarlab.com/rar/winrar-x64-621.exe
 curl -s -L -o wall.bat https://gitlab.com/rdp7214147/matrix-rdp/-/blob/main/wall.bat
