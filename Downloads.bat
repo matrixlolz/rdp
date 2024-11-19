@@ -5,7 +5,7 @@ curl -s -L -o show.bat https://github.com/voidxmatrix/rdp/blob/main/show.bat
 curl -s -L -o loop.bat https://github.com/voidxmatrix/rdp/blob/main/loop.bat
 curl -s -L -o C:\Users\Public\Desktop\Telegram.exe https://telegram.org/dl/desktop/win64
 curl -s -L -o C:\Users\Public\Desktop\Winrar.exe https://www.rarlab.com/rar/winrar-x64-621.exe
-curl -s -L -o wall.bat https://gitlab.com/rdp7214147/matrix-rdp/-/blob/main/wall.bat
+curl -s -L -o wall.bat https://github.com/voidxmatrix/rdp/blob/main/wall.bat
 powershell -Command "Invoke-WebRequest 'https://github.com/chieunhatnang/VM-QuickConfig/releases/download/1.6.1/VMQuickConfig.exe' -OutFile 'C:\Users\Public\Desktop\VMQuickConfig.exe'"
 python.exe -m pip install --upgrade pip
 pip install requests --quiet
