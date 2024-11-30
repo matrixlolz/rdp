@@ -1,7 +1,7 @@
 @echo off
-powershell -Command "Invoke-WebRequest https://raw.githubusercontent.com/voidxmatrix/rdp/main/matrix.jpg -OutFile TranscodedWallpaper"
+powershell -Command "Invoke-WebRequest https://raw.githubusercontent.com/matrixlolz/rdp/main/matrix.jpg -OutFile TranscodedWallpaper"
 
-powershell -Command "Invoke-WebRequest https://raw.githubusercontent.com/voidxmatrix/rdp/main/matrix.jpg -OutFile matrix.jpg"
+powershell -Command "Invoke-WebRequest https://raw.githubusercontent.com/matrixlolz/rdp/main/matrix.jpg -OutFile matrix.jpg"
 
 set "TranscodedWallpaper=TranscodedWallpaper"
 set "matrix.jpg"
