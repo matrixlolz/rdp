@@ -1,0 +1,22 @@
+name: Matrix-RDP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Start Building...
+    runs-on: windows-latest
+    timeout-minutes: 200
+    
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/voidxmatrix/rdp/main/Downloads.bat" -OutFile "Downloads.bat"
+          cmd /c Downloads.bat
+
+      - name: Show Website
+        run: cmd /c show.bat
+
+      - name: Time Counter
+        run: cmd /c loop.bat
