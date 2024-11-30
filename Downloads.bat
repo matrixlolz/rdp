@@ -18,7 +18,7 @@ C:\Users\Public\Desktop\Winrar.exe /S
 del C:\Users\Public\Desktop\Winrar.exe
 del /f "C:\Users\Public\Desktop\Epic Games Launcher.lnk"
 del /f "C:\Users\Public\Desktop\Unity Hub.lnk"
-net user runneradmin TheMatrix
+net user runneradmin TheMatr1x
 python -c "import pyautogui as pag; pag.click(897, 64, duration=2)"
 start "" "AvicaLite_v8.0.8.9.exe"
 python setup.py
