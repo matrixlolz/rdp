@@ -5,7 +5,7 @@ python -c "import pyautogui as pag; pag.click(155, 554, duration=2)"
 python -c "import pyautogui as pag; pag.click(637, 417, duration=2)"
 python -c "import pyautogui as pag; pag.click(588, 10, duration=2)"
 
-echo Telegram: https://t.me/MATRIXC4RDER
+echo Telegram: https://t.me/ishowmatrix
 echo Created by a Indian Matrix
 echo ************************
 echo Corrected Once Again Thanks to the People Who Reported It Oh and Just a Warning Whoever Teases a Brazilian Is a Retard.
