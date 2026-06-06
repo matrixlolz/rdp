@@ -5,7 +5,7 @@ import os
 import subprocess
 import sys
 
-# Auto-install Pillow if missing
+# Auto install Pillow
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
@@ -16,121 +16,77 @@ except ImportError:
     install("pillow")
     from PIL import Image, ImageDraw
 
-# ================== CONFIG ==================
 img_filename = 'Avicaidbymatrix.png'
 
-possible_paths = [
-    r"C:\Program Files (x86)\Avica\Avica.exe",
-    r"C:\Program Files\Avica\Avica.exe",
-    r"C:\Avica\Avica.exe",
-]
+print("Starting Avica automation...")
 
+time.sleep(10)
+
+# Launch Avica (already started in Downloads.bat, but ensure it's running)
+try:
+    subprocess.Popen([r"AvicaLite_v8.0.8.9.exe"])
+    print("Launched AvicaLite")
+except:
+    print("Avica already running or launch failed")
+
+time.sleep(15)  # Important: Wait for Avica window to fully load
+
+# Improved click sequence for Avica setup
 actions = [
-    (516, 405, 4),
-    (50, 100, 1),
+    (900, 600, 3),   # Main window / Get Started
+    (516, 405, 3),
+    (50, 100, 2),
+    (249, 203, 4),   # Allow remote access (multiple clicks)
     (249, 203, 4),
     (249, 203, 4),
     (249, 203, 4),
-    (249, 203, 4),
-    (447, 286, 4),
+    (447, 286, 4),   # Final step
 ]
 
-print("Starting Avica automation script...")
-
-time.sleep(8)
-
-def find_avica_exe():
-    for path in possible_paths:
-        if os.path.exists(path):
-            print(f"Found Avica at: {path}")
-            return path
-    print("Deep searching for Avica.exe...")
-    try:
-        for root, dirs, files in os.walk("C:\\"):
-            if "Avica.exe" in files:
-                full_path = os.path.join(root, "Avica.exe")
-                print(f"Found via search: {full_path}")
-                return full_path
-    except:
-        pass
-    return None
-
-def upload_image_to_gofile(img_filename):
-    url = 'https://store1.gofile.io/uploadFile'
-    try:
-        with open(img_filename, 'rb') as img_file:
-            files = {'file': img_file}
-            response = requests.post(url, files=files, timeout=30)
-            response.raise_for_status()
-            result = response.json()
-
-            if result.get('status') == 'ok':
-                download_page = result['data']['downloadPage']
-                with open('show.bat', 'a', encoding='utf-8') as bat_file:
-                    bat_file.write(f'\necho Avica Remote ID : {download_page}')
-                print(f"Upload successful -> {download_page}")
-                return download_page
-            else:
-                print("Upload error:", result.get('status'))
-                return None
-    except Exception as e:
-        print(f"Upload failed: {e}")
-        return None
-
-# === Find & Launch Avica ===
-avica_path = find_avica_exe()
-
-if not avica_path:
-    print("Avica.exe not found on this runner.")
-else:
-    try:
-        print(f"Launching: {avica_path}")
-        subprocess.Popen([avica_path])
-        time.sleep(10)
-    except Exception as e:
-        print(f"Launch failed: {e}")
-
-# === Main Click Sequence ===
 for i, (x, y, duration) in enumerate(actions, 1):
     try:
         pag.click(x, y, duration=duration)
         print(f"Step {i}: Clicked at ({x}, {y})")
     except Exception as e:
-        print(f"Click failed at ({x}, {y}): {e}")
+        print(f"Click failed: {e}")
 
-    if (x, y) == (249, 203):
-        time.sleep(2)
-        try:
-            pag.click(x, y, duration=duration)
-        except:
-            pass
+    if (x, y) in [(249, 203), (447, 286)]:
+        time.sleep(3)
+        pag.click(x, y, duration=2)  # Extra click for confirmation
 
-    if (x, y) == (447, 286):
-        time.sleep(12)
+    time.sleep(6)
 
-        # Screenshot with fallback
-        try:
-            print("Taking screenshot...")
-            screenshot = pag.screenshot()
-            screenshot.save(img_filename)
-            print("Screenshot saved successfully")
-        except Exception as e:
-            print(f"Screenshot failed (normal in headless): {e}")
-            try:
-                img = Image.new('RGB', (1024, 768), color=(10, 10, 30))
-                draw = ImageDraw.Draw(img)
-                draw.text((80, 80), "Avica Automation\nScreenshot failed - Headless Runner", fill=(255, 255, 100))
-                img.save(img_filename)
-                print("Dummy screenshot created")
-            except:
-                open(img_filename, 'w').close()
+# Take screenshot of Avica ID
+time.sleep(12)
+try:
+    print("Taking screenshot of Avica ID...")
+    screenshot = pag.screenshot()
+    screenshot.save(img_filename)
+    print("Screenshot saved")
+except Exception as e:
+    print(f"Screenshot failed: {e}")
+    # Dummy image
+    img = Image.new('RGB', (1280, 720), color=(0, 0, 40))
+    draw = ImageDraw.Draw(img)
+    draw.text((100, 100), "Avica Remote ID Screenshot\n(Headless Mode)", fill=(0, 255, 255))
+    img.save(img_filename)
 
-        gofile_link = upload_image_to_gofile(img_filename)
-        if gofile_link:
-            print("Image uploaded successfully!")
-        else:
-            print("Upload failed")
+# Upload
+def upload_to_gofile(img_filename):
+    try:
+        with open(img_filename, 'rb') as f:
+            response = requests.post('https://store1.gofile.io/uploadFile', files={'file': f}, timeout=30)
+            result = response.json()
+            if result.get('status') == 'ok':
+                link = result['data']['downloadPage']
+                with open('show.bat', 'a', encoding='utf-8') as bat:
+                    bat.write(f'\necho Avica Remote ID Link: {link}')
+                print(f"Avica ID uploaded: {link}")
+                return link
+    except Exception as e:
+        print(f"Upload error: {e}")
+    return None
 
-    time.sleep(8)
+upload_to_gofile(img_filename)
 
-print("Script finished!")
+print("Avica setup completed!")
