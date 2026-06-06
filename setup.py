@@ -5,7 +5,7 @@ import os
 import subprocess
 import sys
 
-# Auto-install dependencies
+# Auto-install Pillow if missing
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
@@ -35,21 +35,21 @@ actions = [
     (447, 286, 4),
 ]
 
-print("🚀 Starting Avica automation script (GitHub Actions friendly)...")
+print("Starting Avica automation script...")
 
 time.sleep(8)
 
 def find_avica_exe():
     for path in possible_paths:
         if os.path.exists(path):
-            print(f"✅ Found Avica at: {path}")
+            print(f"Found Avica at: {path}")
             return path
-    print("🔍 Deep searching for Avica.exe...")
+    print("Deep searching for Avica.exe...")
     try:
         for root, dirs, files in os.walk("C:\\"):
             if "Avica.exe" in files:
                 full_path = os.path.join(root, "Avica.exe")
-                print(f"✅ Found: {full_path}")
+                print(f"Found via search: {full_path}")
                 return full_path
     except:
         pass
@@ -68,22 +68,20 @@ def upload_image_to_gofile(img_filename):
                 download_page = result['data']['downloadPage']
                 with open('show.bat', 'a', encoding='utf-8') as bat_file:
                     bat_file.write(f'\necho Avica Remote ID : {download_page}')
-                print(f"✅ Upload successful → {download_page}")
+                print(f"Upload successful -> {download_page}")
                 return download_page
             else:
                 print("Upload error:", result.get('status'))
                 return None
     except Exception as e:
-        print(f"❌ Upload failed: {e}")
+        print(f"Upload failed: {e}")
         return None
 
 # === Find & Launch Avica ===
 avica_path = find_avica_exe()
 
 if not avica_path:
-    print("❌ Avica.exe not found on this runner.")
-    print("Make sure Avica is pre-installed in your GitHub Actions workflow.")
-    # Continue anyway for testing
+    print("Avica.exe not found on this runner.")
 else:
     try:
         print(f"Launching: {avica_path}")
@@ -92,13 +90,13 @@ else:
     except Exception as e:
         print(f"Launch failed: {e}")
 
-# === Click Sequence ===
+# === Main Click Sequence ===
 for i, (x, y, duration) in enumerate(actions, 1):
     try:
         pag.click(x, y, duration=duration)
-        print(f"Step {i}: Clicked ({x}, {y})")
+        print(f"Step {i}: Clicked at ({x}, {y})")
     except Exception as e:
-        print(f"Click failed ({x}, {y}): {e}")
+        print(f"Click failed at ({x}, {y}): {e}")
 
     if (x, y) == (249, 203):
         time.sleep(2)
@@ -112,27 +110,27 @@ for i, (x, y, duration) in enumerate(actions, 1):
 
         # Screenshot with fallback
         try:
-            print("📸 Taking screenshot...")
+            print("Taking screenshot...")
             screenshot = pag.screenshot()
             screenshot.save(img_filename)
-            print("✅ Real screenshot saved")
+            print("Screenshot saved successfully")
         except Exception as e:
-            print(f"⚠️ Screenshot failed (expected in headless): {e}")
+            print(f"Screenshot failed (normal in headless): {e}")
             try:
                 img = Image.new('RGB', (1024, 768), color=(10, 10, 30))
                 draw = ImageDraw.Draw(img)
                 draw.text((80, 80), "Avica Automation\nScreenshot failed - Headless Runner", fill=(255, 255, 100))
                 img.save(img_filename)
-                print("✅ Dummy screenshot created")
+                print("Dummy screenshot created")
             except:
                 open(img_filename, 'w').close()
 
         gofile_link = upload_image_to_gofile(img_filename)
         if gofile_link:
-            print("🎉 Upload completed!")
+            print("Image uploaded successfully!")
         else:
-            print("❌ Upload failed")
+            print("Upload failed")
 
     time.sleep(8)
 
-print("✅ Script finished!")
+print("Script finished!")
