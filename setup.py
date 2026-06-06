@@ -18,24 +18,24 @@ except ImportError:
 
 print("Starting AvicaLite automation...")
 
-time.sleep(12)
+time.sleep(10)
 
-# Launch AvicaLite
+# Launch AvicaLite (already downloaded by Downloads.bat)
 try:
     subprocess.Popen(["AvicaLite_v8.0.8.9.exe"])
-    print("Launched AvicaLite")
-except:
-    print("AvicaLite already running")
+    print("Launched AvicaLite_v8.0.8.9.exe")
+except Exception as e:
+    print(f"Launch attempt: {e}")
 
-time.sleep(18)
+time.sleep(20)  # Longer wait - AvicaLite takes time to load
 
-# Optimized click sequence
+# Better coordinates for AvicaLite on GitHub runner
 actions = [
-    (960, 540, 3),   # Focus
-    (900, 650, 3),
+    (960, 540, 3),   # Focus center
+    (900, 650, 3),   # Main area / Get Started
     (516, 405, 3),
     (50, 100, 2),
-    (249, 203, 4),
+    (249, 203, 4),   # Allow remote access
     (249, 203, 4),
     (249, 203, 4),
     (249, 203, 4),
@@ -48,17 +48,17 @@ for i, (x, y, duration) in enumerate(actions, 1):
         print(f"Step {i}: Clicked at ({x}, {y})")
     except Exception as e:
         print(f"Click failed: {e}")
-    time.sleep(4)
+    time.sleep(5)
 
-# Extra clicks for Allow button
-time.sleep(6)
+# Extra clicks on Allow button
+time.sleep(8)
 pag.click(249, 203, duration=3)
-time.sleep(6)
+time.sleep(8)
 pag.click(249, 203, duration=3)
 
 time.sleep(15)
 
-# Screenshot
+# Take Screenshot
 try:
     print("Taking screenshot...")
     screenshot = pag.screenshot()
@@ -68,10 +68,10 @@ except Exception as e:
     print(f"Screenshot failed: {e}")
     img = Image.new('RGB', (1280, 720), color=(0, 0, 40))
     draw = ImageDraw.Draw(img)
-    draw.text((100, 100), "Avica Remote ID\nCheck show.bat", fill=(0, 255, 255))
+    draw.text((100, 100), "Avica Remote ID Screenshot\n(Headless Mode)", fill=(0, 255, 255))
     img.save('Avicaidbymatrix.png')
 
-# Upload + Create clean show.bat
+# Upload + Update show.bat
 def upload_to_gofile():
     try:
         with open('Avicaidbymatrix.png', 'rb') as f:
@@ -79,7 +79,6 @@ def upload_to_gofile():
             result = response.json()
             if result.get('status') == 'ok':
                 link = result['data']['downloadPage']
-                
                 with open('show.bat', 'w', encoding='utf-8') as bat:
                     bat.write('@echo off\n')
                     bat.write('echo.\n')
@@ -106,7 +105,7 @@ def upload_to_gofile():
                     bat.write('echo Click the link above to see ID and Password\n')
                     bat.write('echo.\n')
                     bat.write('pause\n')
-                print(f"Avica Remote ID: {link}")
+                print(f"✅ Avica Remote ID: {link}")
                 return link
     except Exception as e:
         print(f"Upload failed: {e}")
@@ -114,4 +113,4 @@ def upload_to_gofile():
 
 upload_to_gofile()
 
-print("Avica setup finished successfully!")
+print("Avica setup finished! Check show.bat")
