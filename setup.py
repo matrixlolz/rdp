@@ -20,22 +20,22 @@ print("Starting AvicaLite automation...")
 
 time.sleep(12)
 
-# Launch AvicaLite (already started in Downloads.bat, but ensure)
+# Launch AvicaLite
 try:
     subprocess.Popen(["AvicaLite_v8.0.8.9.exe"])
     print("Launched AvicaLite")
 except:
     print("AvicaLite already running")
 
-time.sleep(18)  # Longer wait for full UI load
+time.sleep(18)
 
-# Improved coordinates for AvicaLite on 1920x1080 runner
+# Optimized click sequence
 actions = [
-    (960, 540, 3),   # Center click to focus window
-    (900, 650, 3),   # Get Started / Main area
+    (960, 540, 3),   # Focus
+    (900, 650, 3),
     (516, 405, 3),
     (50, 100, 2),
-    (249, 203, 4),   # Allow Remote Access
+    (249, 203, 4),
     (249, 203, 4),
     (249, 203, 4),
     (249, 203, 4),
@@ -48,18 +48,17 @@ for i, (x, y, duration) in enumerate(actions, 1):
         print(f"Step {i}: Clicked at ({x}, {y})")
     except Exception as e:
         print(f"Click failed: {e}")
-    
     time.sleep(4)
 
 # Extra clicks for Allow button
-time.sleep(5)
+time.sleep(6)
 pag.click(249, 203, duration=3)
-time.sleep(5)
+time.sleep(6)
 pag.click(249, 203, duration=3)
 
 time.sleep(15)
 
-# Take screenshot
+# Screenshot
 try:
     print("Taking screenshot...")
     screenshot = pag.screenshot()
@@ -69,10 +68,10 @@ except Exception as e:
     print(f"Screenshot failed: {e}")
     img = Image.new('RGB', (1280, 720), color=(0, 0, 40))
     draw = ImageDraw.Draw(img)
-    draw.text((100, 100), "Avica ID Screenshot\nCheck show.bat", fill=(0, 255, 255))
+    draw.text((100, 100), "Avica Remote ID\nCheck show.bat", fill=(0, 255, 255))
     img.save('Avicaidbymatrix.png')
 
-# Upload to Gofile
+# Upload + Create clean show.bat
 def upload_to_gofile():
     try:
         with open('Avicaidbymatrix.png', 'rb') as f:
@@ -80,10 +79,34 @@ def upload_to_gofile():
             result = response.json()
             if result.get('status') == 'ok':
                 link = result['data']['downloadPage']
-                with open('show.bat', 'a', encoding='utf-8') as bat:
-                    bat.write(f'\necho Avica Remote ID : {link}')
-                    bat.write(f'\necho Click the link above to see ID & Password')
-                print(f"Avica ID Link: {link}")
+                
+                with open('show.bat', 'w', encoding='utf-8') as bat:
+                    bat.write('@echo off\n')
+                    bat.write('echo.\n')
+                    bat.write('echo ================================================\n')
+                    bat.write('echo          Avica Remote Access Info\n')
+                    bat.write('echo ================================================\n')
+                    bat.write('echo.\n')
+                    bat.write('echo Telegram: https://t.me/ishowmatrix\n')
+                    bat.write('echo.\n')
+                    bat.write('echo Created by a Indian Matrix\n')
+                    bat.write('echo ************************\n')
+                    bat.write('echo Corrected Once Again Thanks to the People Who Reported It\n')
+                    bat.write('echo ************************\n')
+                    bat.write('echo *And That Matrix Doesn\'t Take Defiance Home.*\n')
+                    bat.write('echo ************************\n')
+                    bat.write('echo #Teamvoid\n')
+                    bat.write('echo.\n')
+                    bat.write('echo User name : runneradmin\n')
+                    bat.write('echo User Pass : TheMatr1x\n')
+                    bat.write('echo.\n')
+                    bat.write('echo Avica Remote ID Link:\n')
+                    bat.write(f'echo {link}\n')
+                    bat.write('echo.\n')
+                    bat.write('echo Click the link above to see ID and Password\n')
+                    bat.write('echo.\n')
+                    bat.write('pause\n')
+                print(f"Avica Remote ID: {link}")
                 return link
     except Exception as e:
         print(f"Upload failed: {e}")
@@ -91,4 +114,4 @@ def upload_to_gofile():
 
 upload_to_gofile()
 
-print("Avica setup finished! Check show.bat for Remote ID.")
+print("Avica setup finished successfully!")
