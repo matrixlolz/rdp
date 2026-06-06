@@ -7,7 +7,14 @@ import sys
 
 # --- Configuration ---
 img_filename = 'Avicaidbymatrix.png'
-avica_path = r"C:\Program Files (x86)\Avica\Avica.exe"
+
+# Possible Avica paths - we'll try them in order
+possible_avica_paths = [
+    r"C:\Program Files (x86)\Avica\Avica.exe",
+    r"C:\Program Files\Avica\Avica.exe",
+    r"C:\Avica\Avica.exe",
+    # Add more if you know custom location
+]
 
 actions = [
     (516, 405, 4),
@@ -19,13 +26,27 @@ actions = [
     (447, 286, 4),
 ]
 
-# --- Install dependencies if needed (run once) ---
-# pip install --upgrade pyautogui pyscreeze pillow requests
-
 print("Starting Avica automation...")
 
-# Small delay at start
-time.sleep(10)
+time.sleep(5)
+
+def find_avica_exe():
+    """Try to locate Avica.exe"""
+    for path in possible_avica_paths:
+        if os.path.exists(path):
+            print(f"✅ Found Avica at: {path}")
+            return path
+    # Fallback: search in common locations
+    try:
+        import glob
+        for drive in ['C:']:
+            for p in glob.glob(f"{drive}\\**\\Avica.exe", recursive=True):
+                if "Avica" in p:
+                    print(f"✅ Found Avica via search: {p}")
+                    return p
+    except:
+        pass
+    return None
 
 def upload_image_to_gofile(img_filename):
     url = 'https://store1.gofile.io/uploadFile'
@@ -38,10 +59,9 @@ def upload_image_to_gofile(img_filename):
 
             if result.get('status') == 'ok':
                 download_page = result['data']['downloadPage']
-                # Append to show.bat
                 with open('show.bat', 'a', encoding='utf-8') as bat_file:
                     bat_file.write(f'\necho Avica Remote ID : {download_page}')
-                print(f"Upload successful: {download_page}")
+                print(f"✅ Upload successful: {download_page}")
                 return download_page
             else:
                 print("Upload error:", result.get('status'))
@@ -50,57 +70,62 @@ def upload_image_to_gofile(img_filename):
         print(f"Failed to upload image: {e}")
         return None
 
-# Launch Avica properly
+# === Find and Launch Avica ===
+avica_path = find_avica_exe()
+
+if not avica_path:
+    print("❌ Avica.exe not found! Please install Avica first.")
+    print("Download it from: https://www.avica.com/downloads/")
+    sys.exit(1)
+
 try:
     print(f"Launching: {avica_path}")
     subprocess.Popen([avica_path])
-    time.sleep(8)  # Give Avica time to start
+    time.sleep(10)  # Wait longer for GUI to load
 except Exception as e:
     print(f"Failed to launch Avica: {e}")
     sys.exit(1)
 
-# Execute the click sequence
-for x, y, duration in actions:
+# === Click Sequence ===
+for idx, (x, y, duration) in enumerate(actions):
     try:
         pag.click(x, y, duration=duration)
-        print(f"Clicked at ({x}, {y})")
+        print(f"Clicked {idx+1}/{len(actions)} at ({x}, {y})")
     except Exception as e:
         print(f"Click failed at ({x}, {y}): {e}")
 
-    # Special handling for Allow Remote Access button
     if (x, y) == (249, 203):
-        time.sleep(1.5)
-        pag.click(x, y, duration=duration)  # Click again to be sure
+        time.sleep(2)
+        pag.click(x, y, duration=duration)  # Double click for "Allow"
 
-    # Special handling near the end (launch + screenshot)
     if (x, y) == (447, 286):
-        time.sleep(10)  # Extra wait
+        time.sleep(12)
 
+        # Take screenshot with fallback
         try:
             print("Taking screenshot...")
             screenshot = pag.screenshot()
             screenshot.save(img_filename)
-            print(f"Screenshot saved as {img_filename}")
+            print(f"Screenshot saved: {img_filename}")
         except Exception as e:
             print(f"Screenshot failed: {e}")
-            print("This usually happens in headless environments (GitHub Actions, RDP without desktop, etc.)")
-            # Create a dummy image so upload doesn't fail
+            # Create dummy image
             try:
-                from PIL import Image, ImageDraw
-                img = Image.new('RGB', (800, 600), color='black')
+                from PIL import Image, ImageDraw, ImageFont
+                img = Image.new('RGB', (1024, 768), color=(0, 0, 0))
                 draw = ImageDraw.Draw(img)
-                draw.text((50, 50), "Screenshot failed - headless environment", fill='white')
+                draw.text((100, 100), "Screenshot failed\nRunning in headless mode?", fill=(255, 255, 255))
                 img.save(img_filename)
+                print("Dummy image created")
             except:
-                pass
+                open(img_filename, 'a').close()  # Empty file as last resort
 
-        # Upload
         gofile_link = upload_image_to_gofile(img_filename)
         if gofile_link:
-            print(f"✅ Image uploaded: {gofile_link}")
+            print(f"✅ Image uploaded successfully!")
         else:
-            print("❌ Failed to upload image")
+            print("❌ Upload failed")
 
-    time.sleep(8)  # Default delay between actions
+    time.sleep(8)
 
-print('Script finished!')
+print('✅ Script finished!')
